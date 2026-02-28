@@ -17,8 +17,6 @@ static internal class ServiceProviderExtensions
         collection.AddSingleton<ICreatorDAO, MemoryCreatorDAO>();
 
         collection.AddScoped<IArticleService, ArticleService>();
-        collection.AddSingleton<IArticleDAO, ArticleDAO>();
-        collection.AddSingleton<IDAO<ArticleModel>, MemoryDAO<ArticleModel>>();
 
         collection.AddScoped<ICommentService, CommentService>();
         collection.AddSingleton<ICommentDAO, MemoryCommentDAO>();
