@@ -467,4 +467,4 @@ FodyWeavers.xsd
 *.dll
 bin/
 
-
+appsettings.json
