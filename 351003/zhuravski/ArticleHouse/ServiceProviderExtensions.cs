@@ -1,6 +1,8 @@
 using ArticleHouse.DAO;
 using ArticleHouse.DAO.Implementations.Memory;
+using ArticleHouse.DAO.Implementations;
 using ArticleHouse.DAO.Interfaces;
+using ArticleHouse.DAO.Models;
 using ArticleHouse.Service.Implementations;
 using ArticleHouse.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +17,8 @@ static internal class ServiceProviderExtensions
         collection.AddSingleton<ICreatorDAO, MemoryCreatorDAO>();
 
         collection.AddScoped<IArticleService, ArticleService>();
-        collection.AddSingleton<IArticleDAO, MemoryArticleDAO>();
+        collection.AddSingleton<IArticleDAO, ArticleDAO>();
+        collection.AddSingleton<IDAO<ArticleModel>, MemoryDAO<ArticleModel>>();
 
         collection.AddScoped<ICommentService, CommentService>();
         collection.AddSingleton<ICommentDAO, MemoryCommentDAO>();
