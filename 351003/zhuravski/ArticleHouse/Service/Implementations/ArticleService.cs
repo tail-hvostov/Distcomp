@@ -1,60 +1,85 @@
+using ArticleHouse.DAO;
 using ArticleHouse.DAO.Interfaces;
 using ArticleHouse.DAO.Models;
 using ArticleHouse.Service.DTOs;
+using ArticleHouse.Service.Exceptions;
 using ArticleHouse.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArticleHouse.Service.Implementations;
 
 public class ArticleService : Service, IArticleService
 {
-    private readonly IArticleDAO articleDAO;
+    private readonly ApplicationContext db;
 
-    public ArticleService(IArticleDAO articleDAO)
+    public ArticleService(ApplicationContext db)
     {
-        this.articleDAO = articleDAO;
+        this.db = db;
     }
 
     public async Task<ArticleResponseDTO[]> GetAllArticlesAsync()
     {
-        ArticleModel[] models = await InvokeDAOMethod(() => articleDAO.GetAllAsync());
+        ArticleModel[] models = await db.Articles.ToArrayAsync();
         return [.. models.Select(MakeResponseFromModel)];
     }
 
     public async Task<ArticleResponseDTO> CreateArticleAsync(ArticleRequestDTO dto)
     {
         ArticleModel model = MakeModelFromRequest(dto);
-        ArticleModel result = await InvokeDAOMethod(() => articleDAO.AddNewAsync(model));
-        return MakeResponseFromModel(result);
+        await db.Articles.AddAsync(model);
+        await db.SaveChangesAsync();
+        return MakeResponseFromModel(model);
     }
 
     public async Task<ArticleResponseDTO> GetArticleByIdAsync(long id)
     {
-        ArticleModel model = await InvokeDAOMethod(() => articleDAO.GetByIdAsync(id));
+        ArticleModel? model = await db.Articles.FirstOrDefaultAsync(o => o.Id == id);
+        if (null == model)
+        {
+            throw new ServiceObjectNotFoundException();
+        }
         return MakeResponseFromModel(model);
     }
 
     public async Task DeleteArticleAsync(long id)
     {
-        await InvokeDAOMethod(() => articleDAO.DeleteAsync(id));
+        ArticleModel? model = await db.Articles.FirstOrDefaultAsync(o => o.Id == id);
+        if (null == model)
+        {
+            throw new ServiceObjectNotFoundException();
+        }
+        db.Articles.Remove(model);
+        await db.SaveChangesAsync();
     }
 
     public async Task<ArticleResponseDTO> UpdateArticleByIdAsync(long id, ArticleRequestDTO dto)
     {
-        ArticleModel model = MakeModelFromRequest(dto);
-        model.Id = id;
-        ArticleModel result = await InvokeDAOMethod(() => articleDAO.UpdateAsync(model));
-        return MakeResponseFromModel(result);
+        if (null == dto.Id)
+        {
+            throw new ServiceException();
+        }
+        ArticleModel? model = await db.Articles.FirstOrDefaultAsync(o => o.Id == dto.Id);
+        if (null == model) {
+            throw new ServiceObjectNotFoundException();
+        }
+        ShapeModelFromRequest(ref model, dto);
+        await db.SaveChangesAsync();
+        return MakeResponseFromModel(model);
     }
 
     private static ArticleModel MakeModelFromRequest(ArticleRequestDTO dto)
     {
-        return new ArticleModel()
-        {
-            Id = dto.Id ?? 0,
-            CreatorId = dto.CreatorId,
-            Title = dto.Title,
-            Content = dto.Content
-        };
+        ArticleModel result = new();
+        ShapeModelFromRequest(ref result, dto);
+        return result;
+    }
+
+    private static void ShapeModelFromRequest(ref ArticleModel model, ArticleRequestDTO dto)
+    {
+        model.Id = dto.Id ?? 0;
+        model.CreatorId = dto.CreatorId;
+        model.Title = dto.Title;
+        model.Content = dto.Content;
     }
 
     private static ArticleResponseDTO MakeResponseFromModel(ArticleModel model)
