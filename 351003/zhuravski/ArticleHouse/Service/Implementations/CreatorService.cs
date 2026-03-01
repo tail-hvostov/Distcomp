@@ -25,7 +25,7 @@ public class CreatorService : Service, ICreatorService
     {
         CreatorModel model = MakeModelFromRequest(dto);
         await db.Creators.AddAsync(model);
-        await db.SaveChangesAsync();
+        await InvokeDAOMethod(() => db.SaveChangesAsync());
         return MakeResponseFromModel(model);
     }
 
@@ -37,7 +37,7 @@ public class CreatorService : Service, ICreatorService
             throw new ServiceObjectNotFoundException();
         }
         db.Creators.Remove(model);
-        await db.SaveChangesAsync();
+        await InvokeDAOMethod(() => db.SaveChangesAsync());
     }
 
     public async Task<CreatorResponseDTO> GetCreatorByIdAsync(long id)
@@ -61,7 +61,7 @@ public class CreatorService : Service, ICreatorService
             throw new ServiceObjectNotFoundException();
         }
         ShapeModelFromRequest(ref model, dto);
-        await db.SaveChangesAsync();
+        await InvokeDAOMethod(() => db.SaveChangesAsync());
         return MakeResponseFromModel(model);
     }
 
