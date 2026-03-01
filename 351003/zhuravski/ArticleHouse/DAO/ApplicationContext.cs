@@ -6,9 +6,6 @@ namespace ArticleHouse.DAO;
 public class ApplicationContext : DbContext
 {
     public DbSet<ArticleModel> Articles {get; set;} = null!;
-    public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        : base(options)
-    {
-        Database.EnsureCreated();
-    }
+    public DbSet<CreatorModel> Creators {get; set;} = null!;
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) {}
 }

@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ArticleHouse.DAO.Models;
 
+[Table("tbl_creator")]
 public class CreatorModel : Model<CreatorModel>
 {
     public CreatorModel() {}
