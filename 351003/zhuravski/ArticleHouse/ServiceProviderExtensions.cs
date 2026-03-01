@@ -15,9 +15,7 @@ static internal class ServiceProviderExtensions
     {
         collection.AddScoped<ICreatorService, CreatorService>();
         collection.AddScoped<IArticleService, ArticleService>();
-
         collection.AddScoped<ICommentService, CommentService>();
-        collection.AddSingleton<ICommentDAO, MemoryCommentDAO>();
 
         collection.AddScoped<IMarkService, MarkService>();
         collection.AddSingleton<IMarkDAO, MemoryMarkDAO>();
