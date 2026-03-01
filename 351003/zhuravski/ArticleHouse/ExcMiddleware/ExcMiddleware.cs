@@ -42,5 +42,9 @@ public class ExcMiddleware
         {
             await HandleException(context, e, StatusCodes.Status400BadRequest);
         }
+        catch (BadHttpRequestException e)
+        {
+            await HandleException(context, e, StatusCodes.Status400BadRequest);
+        }
     }
 }
