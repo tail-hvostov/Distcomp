@@ -10,6 +10,8 @@ public class CreatorModel : Model<CreatorModel>
     public CreatorModel() {}
     public string Password {get; set;} = default!;
     public string Login {get; set;} = default!;
+    [Column("firstname")]
     public string FirstName {get; set;} = default!;
+    [Column("lastname")]
     public string LastName {get; set;} = default!;
 };

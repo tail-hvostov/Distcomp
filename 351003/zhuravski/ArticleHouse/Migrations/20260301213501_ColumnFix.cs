@@ -5,34 +5,34 @@
 namespace ArticleHouse.Migrations
 {
     /// <inheritdoc />
-    public partial class IdFix : Migration
+    public partial class ColumnFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "Id",
+                name: "last_name",
                 table: "tbl_creator",
-                newName: "id");
+                newName: "lastname");
 
             migrationBuilder.RenameColumn(
-                name: "Id",
-                table: "tbl_article",
-                newName: "id");
+                name: "first_name",
+                table: "tbl_creator",
+                newName: "firstname");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "id",
+                name: "lastname",
                 table: "tbl_creator",
-                newName: "Id");
+                newName: "last_name");
 
             migrationBuilder.RenameColumn(
-                name: "id",
-                table: "tbl_article",
-                newName: "Id");
+                name: "firstname",
+                table: "tbl_creator",
+                newName: "first_name");
         }
     }
 }

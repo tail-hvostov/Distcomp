@@ -22,7 +22,7 @@ static internal class ServiceProviderExtensions
         collection.AddScoped<IMarkService, MarkService>();
         collection.AddSingleton<IMarkDAO, MemoryMarkDAO>();
 
-        collection.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
+        collection.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection).UseSnakeCaseNamingConvention());
         return collection;
     }
 }
