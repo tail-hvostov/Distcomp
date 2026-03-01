@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArticleHouse.DAO.Models;
 
 [Table("tbl_creator")]
+[Index(nameof(Login), IsUnique = true)]
 public class CreatorModel : Model<CreatorModel>
 {
     public CreatorModel() {}

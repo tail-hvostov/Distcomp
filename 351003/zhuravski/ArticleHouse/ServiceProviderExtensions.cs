@@ -14,8 +14,6 @@ static internal class ServiceProviderExtensions
     public static IServiceCollection AddArticleHouseServices(this IServiceCollection collection, string? connection)
     {
         collection.AddScoped<ICreatorService, CreatorService>();
-        collection.AddSingleton<ICreatorDAO, MemoryCreatorDAO>();
-
         collection.AddScoped<IArticleService, ArticleService>();
 
         collection.AddScoped<ICommentService, CommentService>();

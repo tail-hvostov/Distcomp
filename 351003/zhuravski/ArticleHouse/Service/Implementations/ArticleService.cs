@@ -1,5 +1,4 @@
 using ArticleHouse.DAO;
-using ArticleHouse.DAO.Interfaces;
 using ArticleHouse.DAO.Models;
 using ArticleHouse.Service.DTOs;
 using ArticleHouse.Service.Exceptions;
