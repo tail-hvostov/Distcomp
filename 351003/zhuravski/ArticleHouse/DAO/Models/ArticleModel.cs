@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArticleHouse.DAO.Models;
 
 [Table("tbl_article")]
+[Index(nameof(Title), IsUnique = true)]
 public class ArticleModel : Model<ArticleModel>
 {
     public long CreatorId {get; set;}
