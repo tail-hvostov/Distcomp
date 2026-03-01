@@ -26,7 +26,7 @@ public class ArticleService : Service, IArticleService
     {
         ArticleModel model = MakeModelFromRequest(dto);
         await db.Articles.AddAsync(model);
-        await db.SaveChangesAsync();
+        await InvokeDAOMethod(() => db.SaveChangesAsync());
         return MakeResponseFromModel(model);
     }
 
@@ -48,7 +48,7 @@ public class ArticleService : Service, IArticleService
             throw new ServiceObjectNotFoundException();
         }
         db.Articles.Remove(model);
-        await db.SaveChangesAsync();
+        await InvokeDAOMethod(() => db.SaveChangesAsync());
     }
 
     public async Task<ArticleResponseDTO> UpdateArticleByIdAsync(long id, ArticleRequestDTO dto)
@@ -62,7 +62,7 @@ public class ArticleService : Service, IArticleService
             throw new ServiceObjectNotFoundException();
         }
         ShapeModelFromRequest(ref model, dto);
-        await db.SaveChangesAsync();
+        await InvokeDAOMethod(() => db.SaveChangesAsync());
         return MakeResponseFromModel(model);
     }
 
