@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ArticleHouse.DAO.Models;
 
+[Table("tbl_article")]
 public class ArticleModel : Model<ArticleModel>
 {
     public long CreatorId {get; set;}
