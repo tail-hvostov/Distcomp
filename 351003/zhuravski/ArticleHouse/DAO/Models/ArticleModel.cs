@@ -12,4 +12,6 @@ public class ArticleModel : Model<ArticleModel>
     public string Title {get; set;} = default!;
     public string Content {get; set;} = default!;
     //Отметки времени пока решено пропустить.
+
+    public List<ArticleMark> ArticleMarks { get; set; } = [];
 }
