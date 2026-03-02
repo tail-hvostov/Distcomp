@@ -10,10 +10,12 @@ namespace ArticleHouse.Service.Implementations;
 public class ArticleService : Service, IArticleService
 {
     private readonly ApplicationContext db;
+    private readonly IMarkService markService;
 
-    public ArticleService(ApplicationContext db)
+    public ArticleService(ApplicationContext db, IMarkService markService)
     {
         this.db = db;
+        this.markService = markService;
     }
 
     public async Task<ArticleResponseDTO[]> GetAllArticlesAsync()
@@ -24,9 +26,40 @@ public class ArticleService : Service, IArticleService
 
     public async Task<ArticleResponseDTO> CreateArticleAsync(ArticleRequestDTO dto)
     {
+        //Пока предположим, что хеш-теги можно добавлять только при создании.
+        List<long>? markIds = null;
+        if (null != dto.Marks)
+        {
+            IEnumerable<string> marks = dto.Marks.Distinct();
+            List<MarkModel>? markModels = await db.Marks.Where(m => marks.Contains(m.Name)).ToListAsync();
+            markIds = [.. markModels.Select(m => m.Id)];
+            HashSet<string> foundMarks = [.. markModels.Select(m => m.Name)];
+            string[] missingMarks = [.. marks.Where(m => !foundMarks.Contains(m))];
+            foreach (string missing in missingMarks)
+            {
+                MarkRequestDTO request = new()
+                {
+                    Name = missing
+                };
+                MarkResponseDTO response = await markService.CreateMarkAsync(request);
+                markIds.Add(response.Id);
+            }
+        }
         ArticleModel model = MakeModelFromRequest(dto);
         await db.Articles.AddAsync(model);
         await InvokeDAOMethod(() => db.SaveChangesAsync());
+
+        if (null != markIds) {
+            foreach (int markId in markIds)
+            {
+                model.ArticleMarks.Add(new ArticleMark
+                {
+                    ArticleId = model.Id,
+                    MarkId = markId
+                });
+            }
+        }
+
         return MakeResponseFromModel(model);
     }
 
